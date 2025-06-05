@@ -5,6 +5,8 @@ import { APP_CONFIG, AppConfiguration } from './config/app.config';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import * as morgan from 'morgan';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -14,6 +16,17 @@ async function bootstrap() {
 
   // validation pipe
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  // Logging
+  if (appConfig.isProduction) {
+    app.use(
+      morgan('combined', {
+        skip: (req, res) => res.statusCode < 400, // Only log errors in production
+      }),
+    );
+  } else {
+    app.use(morgan('dev'));
+  }
 
   //swagger
   const options = new DocumentBuilder()
