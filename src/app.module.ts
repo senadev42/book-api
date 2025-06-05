@@ -13,10 +13,15 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { BooksModule } from './books/books.module';
 import storageConfig from './config/storage.config';
 import { StorageModule } from './storage/storage.module';
+import { Environment } from './config/enviroment';
+import { validateEnvironment } from './validate-env';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
+      validate: (config: Environment) =>
+        validateEnvironment(config, Environment),
       load: [appConfig, jwtConfig, storageConfig, databaseConfig],
     }),
     TypeOrmModule.forRootAsync({

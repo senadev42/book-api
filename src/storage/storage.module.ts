@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { StorageService } from './storage.service';
-import storageConfig from '../config/storage.config';
 
 @Module({
-  imports: [ConfigModule.forFeature(storageConfig)],
+  imports: [],
   providers: [StorageService],
   exports: [StorageService],
 })

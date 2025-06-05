@@ -7,6 +7,7 @@ import {
   IsString,
   Max,
   Min,
+  ValidateIf,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
@@ -60,16 +61,48 @@ export class Environment {
   // jwt.config.ts
   @IsOptional()
   @IsString()
+  @ValidateIf((o) => !o.JWT_PRIVATE_KEY)
   JWT_PRIVATE_KEY?: string;
 
   @IsOptional()
   @IsString()
+  @ValidateIf((o) => !o.JWT_PUBLIC_KEY)
   JWT_PUBLIC_KEY?: string;
+
+  @IsOptional()
+  @IsString()
+  JWT_ACCESS_TOKEN_EXPIRES_IN?: string;
+
+  // storage.config.ts
+  @IsOptional()
+  @IsString()
+  MINIO_ENDPOINT?: string;
 
   @IsOptional()
   @Transform(({ value }) => parseInt(value, 10))
   @IsNumber()
   @Min(0)
-  @Max(3600)
-  JWT_EXPIRATION_TIME?: number;
+  @Max(65535)
+  MINIO_API_PORT?: number;
+
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  @IsBoolean()
+  MINIO_USE_SSL?: boolean;
+
+  @IsOptional()
+  @IsString()
+  MINIO_PUBLIC_URL?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  STORAGE_ACCESS_KEY: string;
+
+  @IsString()
+  @IsNotEmpty()
+  STORAGE_SECRET_KEY: string;
+
+  @IsString()
+  @IsNotEmpty()
+  STORAGE_BUCKET: string;
 }
