@@ -8,12 +8,16 @@ import {
   Delete,
   UseGuards,
   Request,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiTags,
   ApiOperation,
   ApiParam,
+  ApiConsumes,
+  ApiBody,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BookOwnedGuard } from './guards/book-owned.guard';
@@ -24,6 +28,7 @@ import { CurrentUser } from 'src/auth/decorators/user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { GetBook } from './decorators/book.decorator';
 import { Books } from './entities/book.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('books')
 @ApiBearerAuth('JWT-Auth')
@@ -34,8 +39,14 @@ export class BooksController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new book' })
-  create(@CurrentUser() user: User, @Body() createBookDto: CreateBookDto) {
-    return this.booksService.create(user.id, createBookDto);
+  @UseInterceptors(FileInterceptor('coverImage'))
+  @ApiConsumes('multipart/form-data')
+  create(
+    @CurrentUser() user: User,
+    @Body() createBookDto: CreateBookDto,
+    @UploadedFile() coverImage?: Express.Multer.File,
+  ) {
+    return this.booksService.create(user.id, createBookDto, coverImage);
   }
 
   @Get()
@@ -56,8 +67,14 @@ export class BooksController {
   @UseGuards(BookOwnedGuard)
   @ApiOperation({ summary: 'Update a book' })
   @ApiParam({ name: 'bookId', type: 'string' })
-  update(@GetBook() book: Books, @Body() updateBookDto: UpdateBookDto) {
-    return this.booksService.update(book.id, updateBookDto, book);
+  @UseInterceptors(FileInterceptor('coverImage'))
+  @ApiConsumes('multipart/form-data')
+  update(
+    @GetBook() book: Books,
+    @Body() updateBookDto: UpdateBookDto,
+    @UploadedFile() coverImage?: Express.Multer.File,
+  ) {
+    return this.booksService.update(book.id, updateBookDto, coverImage, book);
   }
 
   @Delete(':bookId')

@@ -11,11 +11,13 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { BooksModule } from './books/books.module';
+import storageConfig from './config/storage.config';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig, jwtConfig, databaseConfig],
+      load: [appConfig, jwtConfig, storageConfig, databaseConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -26,6 +28,7 @@ import { BooksModule } from './books/books.module';
     }),
     AuthModule,
     BooksModule,
+    StorageModule,
   ],
   controllers: [],
   providers: [

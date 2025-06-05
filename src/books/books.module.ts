@@ -4,9 +4,11 @@ import { BooksService } from './books.service';
 import { BooksController } from './books.controller';
 import { Books } from './entities/book.entity';
 import { BookOwnedGuard } from './guards/book-owned.guard';
+import { StorageModule } from '../storage/storage.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Books])],
+  imports: [TypeOrmModule.forFeature([Books]), StorageModule, ConfigModule],
   controllers: [BooksController],
   providers: [BooksService, BookOwnedGuard],
 })
