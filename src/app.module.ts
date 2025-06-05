@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig, {
@@ -10,6 +8,9 @@ import databaseConfig, {
 import appConfig from './config/app.config';
 import jwtConfig from './config/jwt.config';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { BooksModule } from './books/books.module';
 
 @Module({
   imports: [
@@ -24,8 +25,14 @@ import { AuthModule } from './auth/auth.module';
       inject: [ConfigService],
     }),
     AuthModule,
+    BooksModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

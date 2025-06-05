@@ -10,6 +10,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthResponse } from './dto/auth-response.dto';
+import { Public } from './decorators/public.decorator';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -24,6 +25,7 @@ export class AuthController {
     type: AuthResponse,
   })
   @ApiConflictResponse({ description: 'Email or username already exists' })
+  @Public()
   register(@Body() registerDto: RegisterDto): Promise<AuthResponse> {
     return this.authService.register(registerDto);
   }
@@ -37,6 +39,7 @@ export class AuthController {
     type: AuthResponse,
   })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
+  @Public()
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }

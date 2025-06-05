@@ -5,8 +5,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { Books } from 'src/books/entities/book.entity';
 
 @Entity('users')
 export class User {
@@ -31,4 +33,7 @@ export class User {
 
   @Column({ nullable: true })
   lastLoginAt: Date;
+
+  @OneToMany(() => Books, (book) => book.user)
+  books: Books[];
 }

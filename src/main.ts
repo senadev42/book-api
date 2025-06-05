@@ -6,9 +6,13 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import * as morgan from 'morgan';
+import { LoggerFactory } from './logger';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: LoggerFactory('Nest'),
+  });
 
   //configs
   const configService = app.get<ConfigService>(ConfigService);
@@ -33,6 +37,17 @@ async function bootstrap() {
     .setTitle('Birdhouse API')
     .setDescription('API for managing birdhouses')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-Auth', // This name here is important for matching up with @ApiBearerAuth() in your controllers
+    )
     .build();
   const document = SwaggerModule.createDocument(app, options);
 
