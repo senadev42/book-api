@@ -12,7 +12,7 @@ export type DatabaseConfiguration = {
   synchronize: boolean;
 };
 
-export const databaseConfig = registerAs(
+export default registerAs(
   DB_CONFIG,
   (): TypeOrmModuleOptions => ({
     type: 'postgres',
@@ -26,5 +26,3 @@ export const databaseConfig = registerAs(
     logging: process.env.LOGGING === 'true',
   }),
 );
-
-export default databaseConfig;

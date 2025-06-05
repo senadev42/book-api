@@ -8,11 +8,13 @@ import databaseConfig, {
   DB_CONFIG,
 } from './config/database.config';
 import appConfig from './config/app.config';
+import jwtConfig from './config/jwt.config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig, databaseConfig],
+      load: [appConfig, jwtConfig, databaseConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -21,6 +23,7 @@ import appConfig from './config/app.config';
       }),
       inject: [ConfigService],
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

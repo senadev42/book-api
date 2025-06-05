@@ -16,6 +16,7 @@ enum NodeEnv {
 }
 
 export class Environment {
+  // app.config.ts
   @IsEnum(NodeEnv)
   @IsNotEmpty()
   NODE_ENV: NodeEnv;
@@ -27,7 +28,7 @@ export class Environment {
   @IsNotEmpty()
   PORT: number;
 
-  // Database
+  // database.config.ts
   @IsString()
   @IsNotEmpty()
   POSTGRES_DB: string;
@@ -56,19 +57,19 @@ export class Environment {
   @IsBoolean()
   LOGGING: boolean;
 
-  // Optional PgAdmin settings
+  // jwt.config.ts
   @IsOptional()
   @IsString()
-  PGADMIN_DEFAULT_EMAIL?: string;
+  JWT_PRIVATE_KEY?: string;
 
   @IsOptional()
   @IsString()
-  PGADMIN_DEFAULT_PASSWORD?: string;
+  JWT_PUBLIC_KEY?: string;
 
   @IsOptional()
   @Transform(({ value }) => parseInt(value, 10))
   @IsNumber()
   @Min(0)
-  @Max(65535)
-  PGADMIN_PORT?: number;
+  @Max(3600)
+  JWT_EXPIRATION_TIME?: number;
 }
