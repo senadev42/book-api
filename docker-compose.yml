@@ -89,6 +89,24 @@ services:
     networks:
       - books_network
 
+  nestapp:
+    container_name: books_nestapp
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      POSTGRES_HOST: postgres
+      MINIO_ENDPOINT: minio
+    ports:
+      - "${PORT}:3000"
+    depends_on:
+      - postgres
+      - minio
+    networks:
+      - books_network
+    restart: unless-stopped
+
 networks:
   books_network:
     driver: bridge

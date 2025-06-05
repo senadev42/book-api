@@ -34,8 +34,8 @@ async function bootstrap() {
 
   //swagger
   const options = new DocumentBuilder()
-    .setTitle('Birdhouse API')
-    .setDescription('API for managing birdhouses')
+    .setTitle('Book Management API')
+    .setDescription('API for managing books')
     .setVersion('1.0')
     .addBearerAuth(
       {
