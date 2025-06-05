@@ -98,6 +98,9 @@ services:
     environment:
       POSTGRES_HOST: postgres
       MINIO_ENDPOINT: minio
+      MINIO_API_PORT: 9000
+      MINIO_USE_SSL: false
+      MINIO_PUBLIC_URL: http://minio:9000/books
     ports:
       - "${PORT}:3000"
     depends_on:
